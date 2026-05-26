@@ -1,7 +1,7 @@
 [project]
 name = "catia-drawing-assistant"
 version = "0.1.0"
-description = "Local CATIA V5 drawing and exploded-view automation assistant"
+description = "Local CATIA V5 drawing automation assistant / CATIA V5 本地工程图自动化助手"
 requires-python = ">=3.10"
 dependencies = ["pypdf>=4.0"]
 
