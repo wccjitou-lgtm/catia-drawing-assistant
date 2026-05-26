@@ -21,6 +21,14 @@ Run from this directory:
 
 ```powershell
 python -m pip install -e .
+python -m catia_assistant.ui
+```
+
+In the desktop UI, click **Choose CATIA File**, select a `.CATProduct`, then click the generation button you need.
+
+Command-line usage is also available:
+
+```powershell
 python -m catia_assistant.cli status
 python -m catia_assistant.cli views --product MiniDrone.CATProduct
 python -m catia_assistant.cli explode --product MiniDrone.CATProduct
@@ -66,6 +74,14 @@ catia-assistant --product "D:\path\to\MiniDrone.CATProduct" --base-name MiniDron
 
 ```powershell
 python -m pip install -e .
+python -m catia_assistant.ui
+```
+
+在桌面界面中点击 **选择 CATIA 文件**，选择 `.CATProduct` 文件，然后点击需要的生成按钮。
+
+也可以使用命令行：
+
+```powershell
 python -m catia_assistant.cli status
 python -m catia_assistant.cli views --product MiniDrone.CATProduct
 python -m catia_assistant.cli explode --product MiniDrone.CATProduct

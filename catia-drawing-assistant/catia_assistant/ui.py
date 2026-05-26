@@ -12,10 +12,10 @@ from .workflows import WorkflowService
 class App(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
-        self.title("CATIA 工程图助手")
-        self.geometry("860x560")
+        self.title("CATIA Drawing Assistant / CATIA 工程图助手")
+        self.geometry("920x580")
 
-        self.product_var = tk.StringVar(value="MiniDrone.CATProduct")
+        self.product_var = tk.StringVar(value="")
         self.base_var = tk.StringVar(value="MiniDrone")
         self.output_var = tk.StringVar(value="output")
         self.explosion_scale_var = tk.StringVar(value="0.65")
@@ -26,11 +26,14 @@ class App(tk.Tk):
         form = tk.Frame(self, padx=12, pady=12)
         form.pack(fill=tk.X)
 
-        self._row(form, 0, "产品文件", self.product_var)
+        self._row(form, 0, "CATIA 文件", self.product_var, state="readonly")
+        tk.Button(form, text="选择 CATIA 文件", command=self._choose_product).grid(row=0, column=2, padx=6)
+
         self._row(form, 1, "输出前缀", self.base_var)
         self._row(form, 2, "输出目录", self.output_var)
-        self._row(form, 3, "爆炸比例", self.explosion_scale_var)
         tk.Button(form, text="选择目录", command=self._choose_dir).grid(row=2, column=2, padx=6)
+
+        self._row(form, 3, "爆炸比例", self.explosion_scale_var)
 
         buttons = tk.Frame(self, padx=12)
         buttons.pack(fill=tk.X)
@@ -46,20 +49,38 @@ class App(tk.Tk):
 
         self.log = scrolledtext.ScrolledText(self, height=24)
         self.log.pack(fill=tk.BOTH, expand=True, padx=12, pady=12)
+        self._append("请选择 .CATProduct 文件，然后点击生成按钮。\n")
 
-    def _row(self, parent: tk.Frame, row: int, label: str, variable: tk.StringVar) -> None:
+    def _row(self, parent: tk.Frame, row: int, label: str, variable: tk.StringVar, state: str = "normal") -> None:
         tk.Label(parent, text=label, width=12, anchor="e").grid(row=row, column=0, pady=4)
-        tk.Entry(parent, textvariable=variable, width=68).grid(row=row, column=1, sticky="we", pady=4)
+        tk.Entry(parent, textvariable=variable, width=72, state=state).grid(row=row, column=1, sticky="we", pady=4)
         parent.columnconfigure(1, weight=1)
 
+    def _choose_product(self) -> None:
+        selected = filedialog.askopenfilename(
+            title="选择 CATIA 产品文件",
+            filetypes=[
+                ("CATIA Product", "*.CATProduct"),
+                ("All files", "*.*"),
+            ],
+        )
+        if selected:
+            path = Path(selected)
+            self.product_var.set(str(path))
+            if not self.base_var.get().strip() or self.base_var.get().strip() == "MiniDrone":
+                self.base_var.set(path.stem)
+
     def _choose_dir(self) -> None:
-        selected = filedialog.askdirectory()
+        selected = filedialog.askdirectory(title="选择输出目录")
         if selected:
             self.output_var.set(selected)
 
-    def _config(self) -> AppConfig:
+    def _config(self, require_product: bool = True) -> AppConfig:
         cfg = AppConfig()
-        cfg.drawing.product_name = self.product_var.get().strip()
+        product_name = self.product_var.get().strip()
+        if require_product and not product_name:
+            raise ValueError("请先点击“选择 CATIA 文件”，选择一个 .CATProduct 文件。")
+        cfg.drawing.product_name = product_name or "MiniDrone.CATProduct"
         cfg.drawing.base_name = self.base_var.get().strip()
         cfg.drawing.output_dir = Path(self.output_var.get().strip())
         cfg.explosion.output_base_name = f"{cfg.drawing.base_name}_exploded_multiview"
@@ -70,7 +91,7 @@ class App(tk.Tk):
     def _run(self, command: str) -> None:
         def work() -> None:
             try:
-                service = WorkflowService(self._config(), Path.cwd())
+                service = WorkflowService(self._config(require_product=command != "status"), Path.cwd())
                 if command == "status":
                     results = [service.status()]
                 elif command == "views":

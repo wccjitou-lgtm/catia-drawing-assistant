@@ -104,7 +104,7 @@ catia-assistant-ui
 
 Fill in:
 
-- Product file: open CATProduct name or full `.CATProduct` path.
+- Product file: click the file button and select a `.CATProduct` file.
 - Output prefix: for example `MiniDrone`.
 - Output directory: for example `output`.
 - Explosion scale: for example `0.65`.
