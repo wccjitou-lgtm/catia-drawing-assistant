@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# CATIA generated artifacts
+output/
+catia-drawing-assistant/output/
+tmp/
+catia-drawing-assistant/tmp/
+*.CATDrawing
+*.CATProduct
+*.CATPart
+*.pdf
+
+# Local editor/system files
+.DS_Store
+Thumbs.db

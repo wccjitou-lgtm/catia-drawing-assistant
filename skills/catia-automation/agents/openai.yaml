@@ -1,0 +1,3 @@
+display_name: CATIA Automation
+short_description: Generate CATIA V5 multi-view drawings, exploded views, and PDFs.
+default_prompt: Generate CATIA engineering drawings and PDFs using the local CATIA Drawing Assistant.

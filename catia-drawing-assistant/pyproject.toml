@@ -1,0 +1,16 @@
+[project]
+name = "catia-drawing-assistant"
+version = "0.1.0"
+description = "Local CATIA V5 drawing and exploded-view automation assistant"
+requires-python = ">=3.10"
+dependencies = ["pypdf>=4.0"]
+
+[project.scripts]
+catia-assistant = "catia_assistant.cli:main"
+catia-assistant-ui = "catia_assistant.ui:main"
+
+[tool.setuptools]
+packages = ["catia_assistant"]
+
+[tool.setuptools.package-data]
+catia_assistant = ["templates/*.vbs"]
